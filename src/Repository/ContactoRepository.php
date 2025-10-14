@@ -6,9 +6,9 @@ use App\Entity\Contacto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Contacto>
- */
+/***
+* @extends ServiceEntityRepository<Contacto>
+*/
 class ContactoRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,9 +16,9 @@ class ContactoRepository extends ServiceEntityRepository
         parent::__construct($registry, Contacto::class);
     }
 
-    //    /**
-    //     * @return Contacto[] Returns an array of Contacto objects
-    //     */
+    
+    #return Contacto[] Returns an array of Contacto objects;
+   
     //    public function findByExampleField($value): array
     //    {
     //        return $this->createQueryBuilder('c')
@@ -40,4 +40,13 @@ class ContactoRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    
+    public function findByName($text): array{
+        $qb = $this->createQueryBuilder('c')
+        ->andwhere('c.nombre LIKE :text')
+        ->setParameter('text', '%'. $text . '%')
+        ->getQuery();
+        return $qb->execute();
+    }
 }

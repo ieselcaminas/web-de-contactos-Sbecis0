@@ -3,6 +3,8 @@
 namespace App\Controller;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Contacto;
+use App\Repository\ContactoRepository;
+use Symfony\Bridge\Doctrine\ManagerRegistry as DoctrineManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,16 +62,29 @@ final class PageController extends AbstractController
     
 
     #[Route('/contacto/{codigo}', name: 'ficha_contacto')]
-    public function ficha($codigo): Response
+    public function ficha(ManagerRegistry $doctrine, $codigo): Response
     {
+        $repositorio = $doctrine->getRepository(Contacto::class);
+        $contacto = $repositorio->find($codigo);
+
+            return $this->render('ficha_contacto.html.twig', [
+                "contacto" => $contacto]);
         
-        $contacto = ($this->contactos[$codigo] ?? null);
 
-        if ($contacto){
-            return $this->render('ficha_contacto.html.twig', ["contacto" => $contacto]);
-        }
+    
+    }
 
-        return new Response("<html><body>Contacto $codigo no encontrado</body></html>"); // Added closing tags
+    #[Route('/contacto/buscar/{texto}', name: 'buscar_contacto')]
+    public function buscar(ManagerRegistry $doctrine, $texto): Response{
+
+        $repositorio = $doctrine->getRepository(Contacto::class);
+
+        $contactos = $repositorio->findByName($texto);
+
+        return $this->render('ficha_contacto.html.twig', [
+            'contactos' => $contactos
+        ]);
     }
     
 }
+
