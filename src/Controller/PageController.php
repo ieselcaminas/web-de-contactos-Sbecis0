@@ -159,8 +159,8 @@ final class PageController extends AbstractController
     #[Route('/', name: 'inicio')]
     public function inicio(ManagerRegistry $doctrine): Response
     {
-        if ($this->getUser()) {
-            return $this->redirect('/index');
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
         }
         $repo = $doctrine->getRepository(Contacto::class);
         $contactos = $repo->findAll();
