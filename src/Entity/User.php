@@ -33,8 +33,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    // Añadir propiedad name
-    #[ORM\Column(length: 255)]
+    // Añadir propiedad (nullable para evitar error inmediato)
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
     public function getId(): ?int
@@ -70,7 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // garantiza que cada usuarioa tenga al menos un ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -101,13 +101,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // Eliminar la función inválida 'public function name{}' y añadir getter/setter correctos:
+    // añadir getter/setter correctos:
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
         return $this;

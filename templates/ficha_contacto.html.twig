@@ -1,10 +1,26 @@
 {% extends 'base.html.twig' %}
-{% block title %} Contactos {% endblock %}
+{% block title %}Ficha contacto{% endblock %}
 {% block body %}
-    <h1 >Ficha del contacto</h1>
+    <h1>Ficha del contacto</h1>
+
     {% if contacto %}
-        {{include ('partials/datos_contacto.html.twig', { 'contacto': contacto }) }}
+        {# Si llega el formulario, lo renderizamos (edición / borrar) #}
+        {% if form is defined %}
+            {{ form_start(form) }}
+                {{ form_row(form.nombre) }}
+                {{ form_row(form.telefono) }}
+                {{ form_row(form.email) }}
+                <div>
+                    {{ form_widget(form.save) }}
+                    {{ form_widget(form.delete) }}
+                </div>
+            {{ form_end(form) }}
+        {% else %}
+            {{ include('partials/datos_contacto.html.twig', { 'contacto': contacto }) }}
+        {% endif %}
+
+        <p><a href="{{ path('inicio') }}">Volver a la lista</a></p>
     {% else %}
-        <h4>Contacto no encontrado</4>
+        <h4>Contacto no encontrado</h4>
     {% endif %}
 {% endblock %}

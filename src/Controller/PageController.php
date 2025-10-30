@@ -48,6 +48,10 @@ final class PageController extends AbstractController
    }
        #[Route('/contacto/nuevo', name: 'nuevo')]
     public function nuevo(ManagerRegistry $doctrine, Request $request){
+        
+        $this->getUser();
+
+
         $contacto = new Contacto();
         $formulario = $this->createForm(ContactoType::class, $contacto);
         $formulario->handleRequest($request);
@@ -153,9 +157,15 @@ final class PageController extends AbstractController
 
     //inicio
     #[Route('/', name: 'inicio')]
-    public function inicio(): Response
+    public function inicio(ManagerRegistry $doctrine): Response
     {
-        return $this->render('inicio.html.twig');
+        if ($this->getUser()) {
+            return $this->redirect('/index');
+        }
+        $repo = $doctrine->getRepository(Contacto::class);
+        $contactos = $repo->findAll();
+
+        return $this->render('inicio.html.twig',['contactos' => $contactos ]);
     }
 
         #[Route("/contacto/insertar", name: "insertar_contacto")]
